@@ -10,31 +10,31 @@ public class CBalade {
 	private String numRue;
 	private String localite;
 	private int cp;
-	private Date date;
+	private Date dateD;
 	private int forfait;
 	private ArrayList<CVehicule> lstVehicule;
 	
 	// Constructeurs
 	
-	public CBalade(String rue, String numRue, String localite, int cp, Date date, int forfait) {
+	public CBalade(String rue, String numRue, String localite, int cp, Date dateD, int forfait) {
 		
 		this.rue = rue;
 		this.numRue = numRue;
 		this.localite = localite;
 		this.cp = cp;
-		this.date = date;
+		this.dateD = dateD;
 		this.forfait = forfait;
 		lstVehicule = new ArrayList<CVehicule>();
 	}
 	
-	public CBalade(int IDBalade, String rue, String numRue, String localite, int cp, Date date, int forfait) {
+	public CBalade(int IDBalade, String rue, String numRue, String localite, int cp, Date dateD, int forfait) {
 		
 		this.IDBalade = IDBalade;
 		this.rue = rue;
 		this.numRue = numRue;
 		this.localite = localite;
 		this.cp = cp;
-		this.date = date;
+		this.dateD = dateD;
 		this.forfait = forfait;
 		lstVehicule = new ArrayList<CVehicule>();
 	}
@@ -63,8 +63,8 @@ public class CBalade {
 		return cp;
 	}
 	
-	public Date getDate() {
-		return date;
+	public Date getDateD() {
+		return dateD;
 	}
 	
 	public int getForfait() {
