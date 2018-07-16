@@ -2,7 +2,7 @@ package Classe;
 
 import java.util.Date;
 
-public abstract class CPersonne {
+public class CPersonne {
 	
 	protected int IDPersonne;
 	protected String nom;

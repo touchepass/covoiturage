@@ -1,6 +1,6 @@
 package Classe;
 
-public abstract class CVtt extends CCategorie{
+public class CVtt extends CCategorie{
 	
 	protected int diamPneu;
 	

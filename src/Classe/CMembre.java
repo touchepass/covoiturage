@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.ArrayList;
 
 public class CMembre extends CPersonne{
-	private int IDMembre;
 	private ArrayList<CCategorie> lstCat;
 	private boolean payementCotistion;
 	
@@ -18,7 +17,7 @@ public class CMembre extends CPersonne{
 		this.payementCotistion = false;
 	}
 	
-	public CMembre(int IDMembre, boolean payementCotistion, int IDPersonne, String nom, String prenom, Date dateNaissance, String genre, String tel, String mail,
+	public CMembre(boolean payementCotistion, int IDPersonne, String nom, String prenom, Date dateNaissance, String genre, String tel, String mail,
 			String rue, String numRue, String localite, String cp, String pseudo, String pass ) {
 		
 		super(IDPersonne,nom,prenom,dateNaissance,genre,tel,mail,rue,numRue,localite,cp,pseudo,pass);
@@ -32,9 +31,6 @@ public class CMembre extends CPersonne{
 	
 	// Accesseurs
 	
-	public int getIDMembre() {
-		return IDMembre;
-	}
 	
 	public ArrayList<CCategorie> getLstCat(){
 		return lstCat;

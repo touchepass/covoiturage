@@ -6,6 +6,16 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import Classe.CMembre;
+import Classe.CPersonne;
+import Classe.CResponsable;
+import Classe.CTresorier;
+import DAO.DMembre;
+import DAO.DPersonne;
+import DAO.DResponsable;
+import DAO.DTresorier;
+
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -16,8 +26,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Color;
 
-public class test extends JFrame {
-
+public class GLogin extends JFrame {
+	
 	private JPanel contentPane;
 	private JTextField txtPseudo;
 	private JTextField txtPass;
@@ -30,7 +40,7 @@ public class test extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					test frame = new test();
+					GLogin frame = new GLogin();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -42,7 +52,7 @@ public class test extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public test() {
+	public GLogin() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -94,15 +104,48 @@ public class test extends JFrame {
 	}
 	
 	private void seConnecter() {
-		if(!checkVide()) {
-			System.out.println("pas vide");
+		CPersonne cp = null;
+		DPersonne dp = new DPersonne();
+		
+		CMembre cm = null;
+		CTresorier ct= null;
+		CResponsable cr = null;
+		
+		if(!checkInfoVide()) {
+			cp = dp.find(txtPseudo.getText().toLowerCase(), txtPass.getText());
+			if(cp != null) {
+				txtErreur.setText("");
+				DMembre dm = new DMembre();
+				cm = dm.find(cp);
+				if(cm != null) {
+					System.out.println("C'est un membre!");
+				}
+				else {
+					DTresorier dt = new DTresorier();
+					ct = dt.find(cp);
+					if(ct != null) {
+						System.out.println("C'est un escroc... heu un trésorier!");
+					}
+					else {
+						DResponsable dr = new DResponsable();
+						cr = dr.find(cp);
+						if(cr != null){
+							System.out.println("C'est un responsable!");
+						}
+					}
+				}
+			}
+			else {
+				txtErreur.setText("Erreur : Identifiants Invalides.");
+			}
 		}
 		else {
 			txtErreur.setText("Erreur : Entrez vos identifiants en premier lieu.");
+			System.out.println("err");
 		}
 	}
 	
-	private boolean checkVide() {
+	private boolean checkInfoVide() {
 		
 		if(txtPseudo.getText().length() < 1 || txtPass.getText().length() <1) {
 			return true;

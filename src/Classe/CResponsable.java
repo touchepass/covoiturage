@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class CResponsable extends CPersonne {
-	private int IDResponsable;
 	private CCategorie cat;
 	
 	// Constructeurs
@@ -16,11 +15,10 @@ public class CResponsable extends CPersonne {
 		this.cat = cat;
 	}
 		
-	public CResponsable(int IDResponsable, CCategorie cat, int IDPersonne, String nom, String prenom, Date dateNaissance, String genre, String tel, String mail,
+	public CResponsable(CCategorie cat, int IDPersonne, String nom, String prenom, Date dateNaissance, String genre, String tel, String mail,
 			String rue, String numRue, String localite, String cp, String pseudo, String pass ) {
 			
 		super(IDPersonne,nom,prenom,dateNaissance,genre,tel,mail,rue,numRue,localite,cp,pseudo,pass);
-		this.IDResponsable = IDResponsable;
 		this.cat = cat;
 	}
 		
@@ -30,9 +28,6 @@ public class CResponsable extends CPersonne {
 	
 	// Accesseurs
 	
-	public int getIDResponsable() {
-		return IDResponsable;
-	}
 	
 	public CCategorie getCat() {
 		return cat;
