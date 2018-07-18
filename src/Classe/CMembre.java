@@ -39,4 +39,6 @@ public class CMembre extends CPersonne{
 	public boolean getPayementCotistion() {
 		return payementCotistion;
 	}
+	
+	
 }

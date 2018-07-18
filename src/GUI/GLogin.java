@@ -19,6 +19,8 @@ import DAO.DTresorier;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.Rectangle;
+
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import javax.swing.border.CompoundBorder;
@@ -51,8 +53,17 @@ public class GLogin extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @param rectangle 
 	 */
+	public GLogin(Rectangle rectangle) {
+		initialize();
+		this.setBounds(rectangle);
+	}
+	
 	public GLogin() {
+		initialize();
+	}
+	private void initialize() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -93,7 +104,7 @@ public class GLogin extends JFrame {
 				seConnecter();
 			}
 		});
-		btnCestParti.setBounds(271, 177, 89, 23);
+		btnCestParti.setBounds(260, 177, 100, 23);
 		contentPane.add(btnCestParti);
 		
 		txtErreur = new JLabel("");
@@ -124,7 +135,9 @@ public class GLogin extends JFrame {
 					DTresorier dt = new DTresorier();
 					ct = dt.find(cp);
 					if(ct != null) {
-						System.out.println("C'est un escroc... heu un trésorier!");
+						GAccueilTresorier fenetre = new GAccueilTresorier(ct, this.getBounds());
+						fenetre.setVisible(true);
+						this.dispose();
 					}
 					else {
 						DResponsable dr = new DResponsable();
