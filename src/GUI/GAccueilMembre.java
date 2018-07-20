@@ -8,46 +8,45 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.Rectangle;
+import java.util.ArrayList;
+
 import javax.swing.JButton;
 import javax.swing.border.LineBorder;
+
+import Classe.CCategorie;
+import Classe.CMembre;
+import DAO.DCategorie;
+import DAO.DMembre;
+
 import java.awt.Color;
 import javax.swing.JComboBox;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class GAccueilMembre extends JFrame {
-
+	
+	private CMembre cm;
 	private JPanel contentPane;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					GAccueilMembre frame = new GAccueilMembre();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
+	private JComboBox<CCategorie> cmb_lstCat;
+	private JComboBox<CCategorie> cmb_lstAutreCat;
+	
 	/**
 	 * Create the frame.
 	 */
-	public GAccueilMembre() {
+	
+	public GAccueilMembre(CMembre cm, Rectangle rectangle) {
+		this.cm = cm;
+		initialize(rectangle);
+	}
+	
+	private void initialize(Rectangle rectangle) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 541, 310);
+		setBounds((int)rectangle.getX(),(int)rectangle.getY(),541,310);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
-		JLabel label = new JLabel("");
-		label.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		label.setBounds(94, 11, 151, 14);
-		contentPane.add(label);
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -59,13 +58,13 @@ public class GAccueilMembre extends JFrame {
 		btnMofifierInfo.setBounds(138, 215, 89, 23);
 		panel.add(btnMofifierInfo);
 		
-		JLabel lbl_add2 = new JLabel("");
-		lbl_add2.setBounds(86, 186, 141, 14);
+		JLabel lbl_add2 = new JLabel(cm.getCp()+" "+cm.getLocalite());
+		lbl_add2.setBounds(86, 186, 141, 18);
 		panel.add(lbl_add2);
 		lbl_add2.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
-		JLabel lbl_add1 = new JLabel("");
-		lbl_add1.setBounds(86, 161, 141, 14);
+		JLabel lbl_add1 = new JLabel(cm.getRue()+" , "+cm.getNumRue());
+		lbl_add1.setBounds(86, 157, 141, 23);
 		panel.add(lbl_add1);
 		lbl_add1.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
@@ -84,7 +83,7 @@ public class GAccueilMembre extends JFrame {
 		panel.add(lblTel);
 		lblTel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
-		JLabel lblAge = new JLabel("Age");
+		JLabel lblAge = new JLabel("Naissance");
 		lblAge.setBounds(12, 83, 64, 17);
 		panel.add(lblAge);
 		lblAge.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -134,34 +133,39 @@ public class GAccueilMembre extends JFrame {
 		panel.add(label_6);
 		label_6.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
-		JLabel lbl_mail = new JLabel("");
-		lbl_mail.setBounds(86, 136, 141, 14);
+		JLabel lbl_mail = new JLabel(cm.getMail());
+		lbl_mail.setBounds(86, 132, 141, 23);
 		panel.add(lbl_mail);
 		lbl_mail.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
-		JLabel lbl_tel = new JLabel("");
-		lbl_tel.setBounds(86, 107, 141, 14);
+		JLabel lbl_tel = new JLabel(cm.getTel());
+		lbl_tel.setBounds(86, 105, 141, 18);
 		panel.add(lbl_tel);
 		lbl_tel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
-		JLabel lbl_age = new JLabel("");
-		lbl_age.setBounds(86, 86, 141, 14);
+		JLabel lbl_age = new JLabel(cm.getDateNaissance().toString());
+		lbl_age.setBounds(86, 80, 141, 23);
 		panel.add(lbl_age);
 		lbl_age.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
-		JLabel lbl_prenom = new JLabel("");
-		lbl_prenom.setBounds(86, 60, 141, 14);
+		JLabel lbl_prenom = new JLabel(cm.getPrenom());
+		lbl_prenom.setBounds(86, 56, 141, 23);
 		panel.add(lbl_prenom);
 		lbl_prenom.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
-		JLabel lbl_nom = new JLabel("");
-		lbl_nom.setBounds(86, 35, 141, 14);
+		JLabel lbl_nom = new JLabel(cm.getNom());
+		lbl_nom.setBounds(86, 31, 141, 23);
 		panel.add(lbl_nom);
 		lbl_nom.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
+		JLabel label = new JLabel(cm.getPseudo());
+		label.setBounds(86, 6, 141, 23);
+		panel.add(label);
+		label.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panel_1.setBounds(255, 11, 258, 162);
+		panel_1.setBounds(255, 11, 245, 168);
 		contentPane.add(panel_1);
 		panel_1.setLayout(null);
 		
@@ -170,31 +174,87 @@ public class GAccueilMembre extends JFrame {
 		lblMesCatgories.setBounds(10, 11, 119, 22);
 		panel_1.add(lblMesCatgories);
 		
-		JComboBox cmb_lstCat = new JComboBox();
-		cmb_lstCat.setBounds(10, 44, 238, 20);
+		cmb_lstCat = new JComboBox<CCategorie>();
+		cmb_lstCat.setForeground(new Color(0, 128, 0));
+		cmb_lstCat.setBounds(10, 44, 225, 20);
 		panel_1.add(cmb_lstCat);
+		initCmbLstCat();
 		
 		JButton btnAjouterCat = new JButton("Ajouter");
-		btnAjouterCat.setBounds(10, 128, 89, 23);
+		btnAjouterCat.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				ajouterCategorie((CCategorie)cmb_lstCat.getSelectedItem());
+			}
+		});
+		btnAjouterCat.setBounds(146, 100, 89, 23);
 		panel_1.add(btnAjouterCat);
 		
-		JLabel lblNewLabel_2 = new JLabel("");
-		lblNewLabel_2.setBackground(Color.RED);
-		lblNewLabel_2.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblNewLabel_2.setBounds(10, 79, 238, 22);
-		panel_1.add(lblNewLabel_2);
-		
 		JButton btnConsulterCalendrier = new JButton("Consulter");
-		btnConsulterCalendrier.setBounds(159, 128, 89, 23);
+		btnConsulterCalendrier.setBounds(146, 14, 89, 23);
 		panel_1.add(btnConsulterCalendrier);
 		
-		JButton btnDeconnecter = new JButton("Deconnecter");
-		btnDeconnecter.setBounds(420, 237, 93, 23);
-		contentPane.add(btnDeconnecter);
+		JLabel lblAutreCats = new JLabel("Autre Cat\u00E9gories");
+		lblAutreCats.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblAutreCats.setBounds(10, 97, 138, 22);
+		panel_1.add(lblAutreCats);
 		
-		JLabel lbl_cotisation = new JLabel("");
-		lbl_cotisation.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lbl_cotisation.setBounds(257, 198, 256, 23);
-		contentPane.add(lbl_cotisation);
+		cmb_lstAutreCat = new JComboBox<CCategorie>();
+		cmb_lstAutreCat.setForeground(Color.RED);
+		cmb_lstAutreCat.setBounds(10, 130, 225, 20);
+		panel_1.add(cmb_lstAutreCat);
+		initCmbLstAutreCat();
+		
+		JButton btnDeconnecter = new JButton("Deconnecter");
+		btnDeconnecter.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				deconnection();
+			}
+		});
+		btnDeconnecter.setBounds(422, 225, 93, 23);
+		contentPane.add(btnDeconnecter);
 	}
+	
+	private void initCmbLstCat() {
+		DCategorie dc = new DCategorie();
+		ArrayList <CCategorie> lstCatInscrit = new ArrayList <CCategorie>();
+		lstCatInscrit = dc.find(cm);
+		for(CCategorie cc : lstCatInscrit) {
+			cmb_lstCat.addItem(cc);
+		}
+	}
+	
+	private void initCmbLstAutreCat() {
+		DCategorie dc = new DCategorie();
+		ArrayList <CCategorie> lstAutreCat = new ArrayList <CCategorie>();
+		lstAutreCat = dc.notFind(cm);
+		for(CCategorie cc : lstAutreCat) {
+			cmb_lstAutreCat.addItem(cc);
+		}
+	}
+	
+	private void deconnection() {
+		GLogin frame = new GLogin(this.getBounds());
+		frame.setVisible(true);
+		this.dispose();
+	}
+	
+	private void ajouterCategorie(CCategorie ca) {
+		DMembre dm = new DMembre();
+		if(dm.create(ca, cm)) {
+			cm.ajouterCategorie(ca);
+			cmb_lstAutreCat.removeItem(ca);
+			cmb_lstCat.addItem(ca);
+			if(dm.updateCotisation(cm,false)) {
+				cm.setPayementCotistion(false);
+			}
+		}
+		else {
+			System.out.println("Erreur ajout ligne cat");
+			//todo
+		}
+		
+	}
+	
 }

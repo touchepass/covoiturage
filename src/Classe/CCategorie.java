@@ -29,4 +29,15 @@ public class CCategorie {
 	public String getNom() {
 		return nom;
 	}
+	
+	// Mutateurs
+	
+	
+	
+	// Méthodes
+	
+	@Override
+	public String toString() {
+		return this.nom;
+	}
 }

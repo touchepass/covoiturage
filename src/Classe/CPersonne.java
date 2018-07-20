@@ -104,6 +104,12 @@ public class CPersonne {
 		return pass;
 	}
 	
+	// Mutateurs
+	
+	
+	
+	// Méthodes
+	
 	@Override
 	public String toString() {
 		return this.pseudo + " (" + this.prenom+ " "+this.nom+")";

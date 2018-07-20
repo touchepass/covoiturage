@@ -59,12 +59,12 @@ public class DMembre extends DAO<CMembre>{
 		return lstCotisationImpaye;
 	}
 	
-	public boolean updateCotisation(CMembre cm){
+	public boolean updateCotisation(CMembre cm, boolean paye){
 		
 		try{
 			Statement stmt = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			stmt.executeUpdate("UPDATE TMembre SET"
-					+ " payementCotistion = true"
+					+ " payementCotistion = "+paye
 					+ " WHERE IDPersonne = "+cm.getIDPersonne()+";");
 		}
 		catch(Exception e){
@@ -74,4 +74,21 @@ public class DMembre extends DAO<CMembre>{
 		
 		return true;
 	}
+	
+	public boolean create(CCategorie ca, CMembre cm) {
+		try{
+			Statement stmt = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			stmt.executeUpdate(
+					"INSERT INTO TLigne_TCategorie (IDPersonne,IDCategorie) "+
+					" VALUES ("+cm.getIDPersonne()+","+ca.getIDCategorie()+");" 
+					);
+		}
+		catch(Exception e){
+			System.out.println(e.getMessage());
+			return false;
+		}
+		
+		return true;
+	}
+	
 }

@@ -57,15 +57,16 @@ public class GLogin extends JFrame {
 	 */
 	public GLogin(Rectangle rectangle) {
 		initialize();
-		this.setBounds(rectangle);
+		this.setBounds((int)rectangle.getX(),(int)rectangle.getY(),450,300);
 	}
 	
 	public GLogin() {
 		initialize();
+		setBounds(100, 100, 450, 300);
 	}
 	private void initialize() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		
 		contentPane = new JPanel();
 		contentPane.setBorder(new CompoundBorder());
 		setContentPane(contentPane);
@@ -129,7 +130,9 @@ public class GLogin extends JFrame {
 				DMembre dm = new DMembre();
 				cm = dm.find(cp);
 				if(cm != null) {
-					System.out.println("C'est un membre!");
+					GAccueilMembre fenetre = new GAccueilMembre(cm,this.getBounds());
+					fenetre.setVisible(true);
+					this.dispose();
 				}
 				else {
 					DTresorier dt = new DTresorier();

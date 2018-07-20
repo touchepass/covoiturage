@@ -26,7 +26,7 @@ public class DPersonne extends DAO<CPersonne> {
 			}
 		}
 		catch(Exception e) {
-			JOptionPane.showMessageDialog(null, e.getMessage());
+			System.out.println(e.getMessage());
 		}
 		
 		return p;
@@ -48,9 +48,10 @@ public class DPersonne extends DAO<CPersonne> {
 			}
 		}
 		catch(Exception e) {
-			JOptionPane.showMessageDialog(null, e.getMessage());
+			System.out.println(e.getMessage());
 		}
 		
 		return p;
 	}
+	
 }

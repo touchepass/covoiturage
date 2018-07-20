@@ -46,7 +46,7 @@ public class GAccueilTresorier extends JFrame {
 	
 	private void initialize(Rectangle rectangle) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(rectangle);
+		setBounds((int)rectangle.getX(),(int)rectangle.getY(),450,300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -126,7 +126,7 @@ public class GAccueilTresorier extends JFrame {
 			DMembre dm = new DMembre();
 			CMembre cm = (CMembre)this.comboBox.getSelectedItem();
 			
-			boolean maj = dm.updateCotisation(cm);
+			boolean maj = dm.updateCotisation(cm,true);
 			if(maj) {
 				comboBox.removeItem(cm);
 			}

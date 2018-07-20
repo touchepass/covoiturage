@@ -40,5 +40,16 @@ public class CMembre extends CPersonne{
 		return payementCotistion;
 	}
 	
+	// mutateurs
+	
+	public void setPayementCotistion(boolean choix) {
+		this.payementCotistion = choix;
+	}
+	
+	// méthodes
+	
+	public void ajouterCategorie(CCategorie ca) {
+		this.lstCat.add(ca);
+	}
 	
 }
