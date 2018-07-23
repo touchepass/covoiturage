@@ -54,4 +54,25 @@ public class DPersonne extends DAO<CPersonne> {
 		return p;
 	}
 	
+	public boolean update(CPersonne cpers,String tel,String mail,String rue,String numRue,String cp,String ville){
+		
+		try{
+			Statement stmt = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			stmt.executeUpdate("UPDATE TPersonne SET"
+					+ " tel = '"+tel+"',"
+					+ " rue = '"+rue+"',"
+					+ " mail ='"+mail+"',"
+					+ " numRue ='"+numRue+"',"
+					+ " cp='"+cp+"',"
+					+ " localite='"+ville+"'"
+					+ " WHERE IDPersonne = "+cpers.getIDPersonne()+";");
+		}
+		catch(Exception e){
+			System.out.println(e.getMessage());
+			return false;
+		}
+		
+		return true;
+	}
+	
 }

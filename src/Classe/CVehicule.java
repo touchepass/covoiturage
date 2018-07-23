@@ -13,7 +13,7 @@ public class CVehicule {
 	
 	// Constructeurs
 	
-	public CVehicule(CMembre conducteur, int nbrPlaceAssise, int nbrPlaceVelo, String imma ) {
+	public CVehicule(CMembre conducteur, int nbrPlaceAssise, int nbrPlaceVelo, String imma) {
 		
 		this.conducteur = conducteur;
 		this.nbrPlaceAssise = nbrPlaceAssise;
@@ -22,7 +22,7 @@ public class CVehicule {
 		lstPassager = new ArrayList<CMembre>();
 	}
 	
-	public CVehicule(int IDVehicule, CMembre conducteur, int nbrPlaceAssise, int nbrPlaceVelo, String imma ) {
+	public CVehicule(int IDVehicule, CMembre conducteur, int nbrPlaceAssise, int nbrPlaceVelo, String imma) {
 		
 		this.IDVehicule = IDVehicule;
 		this.conducteur = conducteur;

@@ -27,7 +27,7 @@ public class CBalade {
 		lstVehicule = new ArrayList<CVehicule>();
 	}
 	
-	public CBalade(int IDBalade, String rue, String numRue, String localite, int cp, Date dateD, int forfait) {
+	public CBalade(int IDBalade, String rue, String numRue, String localite, int cp, Date dateD, int forfait, ArrayList<CVehicule> lstVehicule) {
 		
 		this.IDBalade = IDBalade;
 		this.rue = rue;
@@ -36,7 +36,7 @@ public class CBalade {
 		this.cp = cp;
 		this.dateD = dateD;
 		this.forfait = forfait;
-		lstVehicule = new ArrayList<CVehicule>();
+		this.lstVehicule = lstVehicule;
 	}
 	
 	public CBalade() {}
@@ -73,6 +73,13 @@ public class CBalade {
 	
 	public ArrayList<CVehicule> getLstVehicule(){
 		return lstVehicule;
+	}
+	
+	// Méthodes 
+	
+	@Override
+	public String toString() {
+		return this.getDateD() + " : " + this.getLocalite();
 	}
 	
 }

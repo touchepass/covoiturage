@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class CCalendrier {
 	
 	private int IDCalendrier;
+	private CCategorie ca;
 	private ArrayList<CBalade> lstBalade;
 	private String nom;
 	
@@ -12,23 +13,29 @@ public class CCalendrier {
 	
 	public CCalendrier() {}
 	
-	public CCalendrier(String nom) {
+	public CCalendrier(String nom, CCategorie ca) {
 		
+		this.ca = ca;
 		this.nom = nom;
 		lstBalade = new ArrayList<CBalade>();
 	}
 	
-	public CCalendrier(int IDCalendrier, String nom) {
+	public CCalendrier(int IDCalendrier, CCategorie ca, ArrayList<CBalade> lstBalade,  String nom) {
 		
 		this.IDCalendrier = IDCalendrier;
+		this.ca = ca;
 		this.nom = nom;
-		lstBalade = new ArrayList<CBalade>();
+		this.lstBalade = lstBalade;
 	}
 	
 	// Accesseurs
 	
 	public int getIDCalendrier() {
 		return IDCalendrier;
+	}
+	
+	public CCategorie getCa() {
+		return ca;
 	}
 	
 	public String getNom() {

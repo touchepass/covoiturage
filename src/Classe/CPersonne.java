@@ -106,6 +106,26 @@ public class CPersonne {
 	
 	// Mutateurs
 	
+	public void setTel(String tel) {
+		this.tel = tel;
+	}
+	
+	public void setMail(String mail) {
+		this.mail = mail;
+	}
+	
+	public void setRue(String rue) {
+		this.rue = rue;
+	}
+	public void setNumRue(String numRue) {
+		this.numRue = numRue;
+	}
+	public void setLocalite(String localite) {
+		this.localite = localite;
+	}
+	public void setCp(String cp) {
+		this.cp = cp;
+	}
 	
 	
 	// Méthodes
