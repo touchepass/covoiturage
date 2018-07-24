@@ -223,7 +223,7 @@ public class GAccueilMembre extends JFrame {
 			}
 		});
 		btnAjouterCat.setBounds(146, 100, 89, 23);
-		panel_1.add(btnAjouterCat);
+		panel_1.add(btnAjouterCat);  
 		
 		JButton btnConsulterCalendrier = new JButton("Consulter");
 		btnConsulterCalendrier.addMouseListener(new MouseAdapter() {
