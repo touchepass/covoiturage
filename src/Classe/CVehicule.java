@@ -22,14 +22,14 @@ public class CVehicule {
 		lstPassager = new ArrayList<CMembre>();
 	}
 	
-	public CVehicule(int IDVehicule, CMembre conducteur, int nbrPlaceAssise, int nbrPlaceVelo, String imma) {
+	public CVehicule(int IDVehicule, CMembre conducteur, int nbrPlaceAssise, int nbrPlaceVelo, String imma, ArrayList<CMembre> lstPassager) {
 		
 		this.IDVehicule = IDVehicule;
 		this.conducteur = conducteur;
 		this.nbrPlaceAssise = nbrPlaceAssise;
 		this.nbrPlaceVelo = nbrPlaceVelo;
 		this.imma = imma;
-		lstPassager = new ArrayList<CMembre>();
+		this.lstPassager = lstPassager;
 	}
 	
 	public CVehicule() {}
@@ -60,5 +60,41 @@ public class CVehicule {
 		return imma;
 	}
 	
+	// Mutateurs
+	
+	
+	
+	
+	//Méthodes
+	
+	@Override
+	public String toString() {
+		return getConducteur().getPseudo() + " (" + placeLibre()+ " place(s) dispo. )";
+	}
+	
+	public int placeLibre() {
+		return  getNbrPlaceAssise() - getLstPassager().size();
+	}
+	
+	public boolean estPassager(CMembre cm) {
+		for(CMembre m : this.lstPassager) {
+			if(cm.getPseudo() == m.getPseudo()) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public boolean estConducteur(CMembre cm) {
+		if(cm.getPseudo() == this.conducteur.getPseudo())
+			return true;
+		else
+			return false;
+	}
+	
+	public void ajouterPassager(CMembre cm) {
+		getLstPassager().add(cm);
+	}
 	
 }

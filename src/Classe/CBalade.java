@@ -82,4 +82,8 @@ public class CBalade {
 		return this.getDateD() + " : " + this.getLocalite();
 	}
 	
+	public void ajouterVehicule(CVehicule cv) {
+		lstVehicule.add(cv);
+	}
+	
 }
