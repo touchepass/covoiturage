@@ -91,4 +91,24 @@ public class DMembre extends DAO<CMembre>{
 		return true;
 	}
 	
+	public boolean create(CCategorie ca, CPersonne cp) {
+		try{
+			Statement stmt = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			stmt.executeUpdate(
+					"INSERT INTO TMembre (IDPersonne,payementCotistion) "+
+					" VALUES ("+cp.getIDPersonne()+","+false+");" 
+					);
+			stmt.executeUpdate(
+					"INSERT INTO TLigne_TCategorie (IDPersonne,IDCategorie) "+
+					" VALUES ("+cp.getIDPersonne()+","+ca.getIDCategorie()+");" 
+					);
+		}
+		catch(Exception e){
+			System.out.println(e.getMessage());
+			return false;
+		}
+		
+		return true;
+	}
+	
 }

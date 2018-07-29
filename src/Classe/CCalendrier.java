@@ -45,4 +45,14 @@ public class CCalendrier {
 	public ArrayList<CBalade> getLstBalade(){
 		return lstBalade;
 	}
+	
+	// méthodes
+	
+	public void ajouterBalade(CBalade cb) {
+		this.lstBalade.add(cb);
+	}
+	
+	public void supprimerBalade(CBalade cb) {
+		this.lstBalade.remove(cb);
+	}
 }

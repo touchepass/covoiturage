@@ -48,6 +48,7 @@ public class DVehicule extends DAO<CVehicule>{
 					"INSERT INTO TVehicule (IDPersonne,nbrPlaceAssise,nbrPlaceVelo,imma,IDBalade) "+
 					" VALUES ("+IDPersonne+","+nbrPlaceAssise+","+nbrPlaceVelo+",'"+imma+"',"+IDBalade+");" 
 					);
+
 		}
 		catch(Exception e){
 			System.out.println(e.getMessage());

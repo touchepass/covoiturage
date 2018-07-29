@@ -304,7 +304,7 @@ public class GAccueilMembre extends JFrame {
 			}
 		}
 		else {
-			lbl_err.setText("Erreur : problème DB ligne_cat");
+			lbl_err.setText("Erreur : Rien à ajouter");
 			lbl_ok.setText("");
 		}
 		
@@ -336,9 +336,16 @@ public class GAccueilMembre extends JFrame {
 	}
 	
 	private void consulterCalendrier(CMembre cm, CCategorie ca){
-		GCalendrierBalade win = new GCalendrierBalade(this.getBounds(),cm,ca, this);
-		win.setVisible(true);
-		this.setVisible(false);
+		if(cm.getPayementCotistion()) {
+			GCalendrierBalade win = new GCalendrierBalade(this.getBounds(),cm,ca, this);
+			win.setVisible(true);
+			this.setVisible(false);
+		}
+		else {
+			lbl_err.setText("Faut d'abord payer!");
+			lbl_ok.setText("");
+		}
+		
 	}
 	
 	public void retourVersGAccueilMembre(Rectangle r) {

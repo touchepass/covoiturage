@@ -62,7 +62,7 @@ public class GLogin extends JFrame {
 	
 	public GLogin() {
 		initialize();
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 450, 253);
 	}
 	private void initialize() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -105,14 +105,24 @@ public class GLogin extends JFrame {
 				seConnecter();
 			}
 		});
-		btnCestParti.setBounds(260, 177, 100, 23);
+		btnCestParti.setBounds(155, 180, 100, 23);
 		contentPane.add(btnCestParti);
 		
 		txtErreur = new JLabel("");
 		txtErreur.setForeground(Color.RED);
 		txtErreur.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		txtErreur.setBounds(10, 227, 414, 23);
+		txtErreur.setBounds(10, 36, 414, 23);
 		contentPane.add(txtErreur);
+		
+		JButton btnNouveau = new JButton("Nouveau?");
+		btnNouveau.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				inscription();
+			}
+		});
+		btnNouveau.setBounds(260, 180, 100, 23);
+		contentPane.add(btnNouveau);
 	}
 	
 	private void seConnecter() {
@@ -146,7 +156,9 @@ public class GLogin extends JFrame {
 						DResponsable dr = new DResponsable();
 						cr = dr.find(cp);
 						if(cr != null){
-							System.out.println("C'est un responsable!");
+							GAccueilResponsable fenetre = new GAccueilResponsable(this.getBounds(),cr);
+							fenetre.setVisible(true);
+							this.dispose();
 						}
 					}
 				}
@@ -168,5 +180,11 @@ public class GLogin extends JFrame {
 		}
 	
 		return false;
+	}
+	
+	private void inscription() {
+		GInscription fenetre = new GInscription(this.getBounds());
+		fenetre.setVisible(true);
+		this.dispose();
 	}
 }

@@ -105,7 +105,9 @@ public class CPersonne {
 	}
 	
 	// Mutateurs
-	
+	public void setIDPersonne(int IDPersonne) {
+		this.IDPersonne = IDPersonne;
+	}
 	public void setTel(String tel) {
 		this.tel = tel;
 	}

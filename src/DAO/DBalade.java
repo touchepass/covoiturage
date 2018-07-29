@@ -33,4 +33,44 @@ public class DBalade extends DAO<CBalade> {
 		return lst_ba;
 	}
 	
+	
+	public boolean delete(CBalade obj){
+		try{
+			Statement stmt = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			stmt.executeUpdate("DELETE FROM TBalade WHERE IDBalade = "+obj.getIDBalade()+";");
+		}
+		catch(Exception e){
+			System.out.println(e.getMessage());
+			return false;
+		}
+		
+		return true;
+	}
+	
+	public boolean create(CBalade cb, CCalendrier cc) {
+		try{
+			Statement stmt = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			java.sql.Date sqlDate = new java.sql.Date(cb.getDateD().getTime());
+			
+			String toto = "INSERT INTO TBalade (rue,numRue,localite,cp,dateD,forfait) "+
+					" VALUES ('"+cb.getRue()+"','"+cb.getNumRue()+"','"+cb.getLocalite()+"',"+cb.getCp()+",'"+sqlDate+" 00:00:00',"+cb.getForfait()+");" ;
+			
+			stmt.executeUpdate(
+					toto
+					);
+			
+			ResultSet k = stmt.getGeneratedKeys();
+			k.next();
+			stmt.executeUpdate(
+					"INSERT INTO TLigne_TBalade (IDBalade,IDCalendrier) "+
+					" VALUES ("+k.getLong(1)+","+cc.getIDCalendrier()+");" 
+					);
+		}
+		catch(Exception e){
+			System.out.println(e.getMessage());
+			return false;
+		}
+		
+		return true;
+	}
 }
