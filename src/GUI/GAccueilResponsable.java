@@ -205,7 +205,7 @@ public class GAccueilResponsable extends JFrame {
 				deconnection();
 			}
 		});
-		btnDeconnecter.setBounds(187, 331, 117, 23);
+		btnDeconnecter.setBounds(164, 331, 140, 23);
 		panel_1.add(btnDeconnecter);
 		
 		txtDateM = new JTextField();

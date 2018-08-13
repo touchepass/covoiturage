@@ -1,5 +1,7 @@
 package DAO;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -43,11 +45,19 @@ public class DVehicule extends DAO<CVehicule>{
 	
 	public boolean create(int IDPersonne, int nbrPlaceAssise, int nbrPlaceVelo, String imma,int IDBalade) {
 		try{
-			Statement stmt = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-			stmt.executeUpdate(
-					"INSERT INTO TVehicule (IDPersonne,nbrPlaceAssise,nbrPlaceVelo,imma,IDBalade) "+
-					" VALUES ("+IDPersonne+","+nbrPlaceAssise+","+nbrPlaceVelo+",'"+imma+"',"+IDBalade+");" 
-					);
+			
+			String insertStr = 	"INSERT INTO TVehicule (IDPersonne,nbrPlaceAssise,nbrPlaceVelo,imma,IDBalade)"+
+								"VALUES (?,?,?,?,?)";
+
+			PreparedStatement insertStmt = this.connect.prepareStatement(insertStr);
+			
+			insertStmt.setInt(1, IDPersonne);
+			insertStmt.setInt(2, nbrPlaceAssise);
+			insertStmt.setInt(3, nbrPlaceVelo);
+			insertStmt.setString(4, imma);
+			insertStmt.setInt(5, IDBalade);
+			
+			insertStmt.executeUpdate();
 
 		}
 		catch(Exception e){
@@ -60,11 +70,18 @@ public class DVehicule extends DAO<CVehicule>{
 	
 	public boolean createCoVoiturage(CMembre cm, CVehicule cv) {
 		try{
-			Statement stmt = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-			stmt.executeUpdate(
-					"INSERT INTO TPassager_TVehicule (IDVehicule,IDPersonne) "+
-					" VALUES ("+cv.getIDVehicule()+","+cm.getIDPersonne()+");" 
-					);
+			
+			String insertStr = 	"NSERT INTO TPassager_TVehicule (IDVehicule,IDPersonne) "+
+					" VALUES (?,?)"; 
+
+			PreparedStatement insertStmt = this.connect.prepareStatement(insertStr);
+			
+			insertStmt.setInt(1, cv.getIDVehicule());
+			insertStmt.setInt(2, cm.getIDPersonne());
+			
+			
+			insertStmt.executeUpdate();
+
 		}
 		catch(Exception e){
 			System.out.println(e.getMessage());

@@ -1,5 +1,6 @@
 package DAO;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -62,10 +63,15 @@ public class DMembre extends DAO<CMembre>{
 	public boolean updateCotisation(CMembre cm, boolean paye){
 		
 		try{
-			Statement stmt = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-			stmt.executeUpdate("UPDATE TMembre SET"
-					+ " payementCotistion = "+paye
-					+ " WHERE IDPersonne = "+cm.getIDPersonne()+";");
+			String updateStr = "UPDATE TMembre SET payementCotistion = ? WHERE IDPersonne = ?";
+			
+			PreparedStatement updateStmt = this.connect.prepareStatement(updateStr);
+			
+			updateStmt.setBoolean(1, paye);
+			updateStmt.setInt(2, cm.getIDPersonne());
+	
+			updateStmt.executeUpdate();
+		
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -77,11 +83,15 @@ public class DMembre extends DAO<CMembre>{
 	
 	public boolean create(CCategorie ca, CMembre cm) {
 		try{
-			Statement stmt = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-			stmt.executeUpdate(
-					"INSERT INTO TLigne_TCategorie (IDPersonne,IDCategorie) "+
-					" VALUES ("+cm.getIDPersonne()+","+ca.getIDCategorie()+");" 
-					);
+			String updateStr = "INSERT INTO TLigne_TCategorie (IDPersonne,IDCategorie) VALUES (?,?) ";
+			
+			PreparedStatement updateStmt = this.connect.prepareStatement(updateStr);
+			
+			updateStmt.setInt(1, cm.getIDPersonne());
+			updateStmt.setInt(2, ca.getIDCategorie());
+	
+			updateStmt.executeUpdate();
+	
 		}
 		catch(Exception e){
 			System.out.println(e.getMessage());
@@ -91,17 +101,26 @@ public class DMembre extends DAO<CMembre>{
 		return true;
 	}
 	
+	
 	public boolean create(CCategorie ca, CPersonne cp) {
 		try{
-			Statement stmt = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-			stmt.executeUpdate(
-					"INSERT INTO TMembre (IDPersonne,payementCotistion) "+
-					" VALUES ("+cp.getIDPersonne()+","+false+");" 
-					);
-			stmt.executeUpdate(
-					"INSERT INTO TLigne_TCategorie (IDPersonne,IDCategorie) "+
-					" VALUES ("+cp.getIDPersonne()+","+ca.getIDCategorie()+");" 
-					);
+			String updateStr = "INSERT INTO TMembre (IDPersonne,payementCotistion) VALUES (?,?)";
+			
+			PreparedStatement updateStmt = this.connect.prepareStatement(updateStr);
+			
+			updateStmt.setInt(1, cp.getIDPersonne());
+			updateStmt.setBoolean(2, false);
+	
+			updateStmt.executeUpdate();
+			
+			String updateStr2 = "INSERT INTO TLigne_TCategorie (IDPersonne,IDCategorie)  (?,?)";
+			PreparedStatement updateStmt2 = this.connect.prepareStatement(updateStr2);
+			
+			updateStmt2.setInt(1, cp.getIDPersonne());
+			updateStmt2.setInt(2, ca.getIDCategorie());
+			
+			updateStmt2.executeUpdate();
+			
 		}
 		catch(Exception e){
 			System.out.println(e.getMessage());
