@@ -169,7 +169,6 @@ public class GLogin extends JFrame {
 		}
 		else {
 			txtErreur.setText("Erreur : Entrez vos identifiants en premier lieu.");
-			System.out.println("err");
 		}
 	}
 	

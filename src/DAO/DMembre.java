@@ -113,7 +113,7 @@ public class DMembre extends DAO<CMembre>{
 	
 			updateStmt.executeUpdate();
 			
-			String updateStr2 = "INSERT INTO TLigne_TCategorie (IDPersonne,IDCategorie)  (?,?)";
+			String updateStr2 = "INSERT INTO TLigne_TCategorie (IDPersonne,IDCategorie) VALUES (?,?)";
 			PreparedStatement updateStmt2 = this.connect.prepareStatement(updateStr2);
 			
 			updateStmt2.setInt(1, cp.getIDPersonne());

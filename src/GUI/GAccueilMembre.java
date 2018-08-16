@@ -295,7 +295,7 @@ public class GAccueilMembre extends JFrame {
 	
 	private void ajouterCategorie(CCategorie ca) {
 		DMembre dm = new DMembre();
-		if(dm.create(ca, cm)) {
+		if(ca != null && dm != null && dm.create(ca, cm)) {
 			cm.ajouterCategorie(ca);
 			cmb_lstAutreCat.removeItem(ca);
 			cmb_lstCat.addItem(ca);

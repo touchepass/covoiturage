@@ -26,6 +26,8 @@ import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class GInscription extends JFrame {
 
@@ -258,6 +260,11 @@ public class GInscription extends JFrame {
 		contentPane.add(btnNewButton);
 		
 		JButton btnRetour = new JButton("Retour");
+		btnRetour.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				retour();
+			}
+		});
 		btnRetour.setBounds(181, 493, 89, 23);
 		contentPane.add(btnRetour);
 		

@@ -353,29 +353,43 @@ public class GCalendrierBalade extends JFrame {
 		if(!verificationDejaEnregistre()) {
 			DVehicule dv = new DVehicule();
 			CVehicule cv = (CVehicule)cmb_voiture.getSelectedItem();
-			if(cv.placeLibre() > 0) {
-				if(dv.createCoVoiturage(cm,cv)) {
-					cv.ajouterPassager(cm);
-					lbl_err.setForeground(Color.black);
-					lbl_err.setText("Passager enregistré!");
-					cmbVoitureInit();
+			
+			
+			if( cv == null ) {
+				if(cv.placeLibre() > 0) {
+					if(dv.createCoVoiturage(cm,cv)) {
+						cv.ajouterPassager(cm);
+						lbl_err.setForeground(Color.black);
+						lbl_err.setText("Passager enregistré!");
+						cmbVoitureInit();
+					}
+					else {
+						lbl_err.setForeground(Color.RED);
+						lbl_err.setText("Erreur : Demande non enregistrée!");
+					}
 				}
 				else {
 					lbl_err.setForeground(Color.RED);
-					lbl_err.setText("Erreur : Demande non enregistrée!");
+					lbl_err.setText("Erreur : Plus de place!");
 				}
+				
 			}
-			else {
-				lbl_err.setForeground(Color.RED);
-				lbl_err.setText("Erreur : Plus de place!");
-			}
-			
+		}
+		else {
+			lbl_err.setForeground(Color.RED);
+			lbl_err.setText("Erreur : Pas de véhicule!");
 		}
 		
 	}
 	
 	private boolean verificationDejaEnregistre() {
 		CBalade cb = (CBalade) cmb_balade.getSelectedItem();
+		if( cb == null ) {
+			lbl_err.setForeground(Color.RED);
+			lbl_err.setText("Vous devez selectionner une balade!");
+			return true;
+		}
+		
 		ArrayList <CVehicule> lstVehicule = cb.getLstVehicule();
 		for(CVehicule cv : lstVehicule) {
 			if(cv.estConducteur(cm)) {

@@ -35,7 +35,7 @@ public class DPersonne extends DAO<CPersonne> {
 			querry = " erreur";
 		}
 		
-		System.out.println(querry);
+		//System.out.println(querry);
 		return p;
 	}
 	

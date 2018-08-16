@@ -14,7 +14,7 @@ public class DConnection {
 			instance = DriverManager.getConnection(url);
 		}
 		catch(ClassNotFoundException ex){
-			JOptionPane.showMessageDialog(null, "Classe de driver introuvable" + ex.getMessage());
+			JOptionPane.showMessageDialog(null, "Les libraires ucanaccess sont introuvables" + ex.getMessage());
 			System.exit(0);
 		}
 		catch (SQLException ex) {
