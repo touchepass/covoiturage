@@ -1,6 +1,5 @@
 package Classe;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 public class CResponsable extends CPersonne {

@@ -1,16 +1,20 @@
 package GUI;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Rectangle;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
-import javax.swing.SwingConstants;
-import javax.swing.JComboBox;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import Classe.CBalade;
@@ -18,14 +22,10 @@ import Classe.CCalendrier;
 import Classe.CCategorie;
 import Classe.CMembre;
 import Classe.CVehicule;
+import DAO.DAO;
 import DAO.DBalade;
 import DAO.DCalendrier;
 import DAO.DVehicule;
-
-import java.awt.Color;
-import javax.swing.JTextField;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class GCalendrierBalade extends JFrame {
 
@@ -35,8 +35,6 @@ public class GCalendrierBalade extends JFrame {
 	private CCategorie ca;
 	private CCalendrier cl;
 	private GAccueilMembre ga;
-	
-	private DCalendrier dc = new DCalendrier();
 	
 	private JTextField txt_place_assise;
 	private JTextField txt_place_velo;
@@ -61,7 +59,10 @@ public class GCalendrierBalade extends JFrame {
 		this.ga = ga;
 		this.ca = ca;
 		this.cm = cm;
+		
+		DAO<CCalendrier> dc = new DCalendrier();
 		this.cl = dc.find(ca.getNom());
+		
 		initialize(rectangle);
 	}
 	
@@ -276,8 +277,8 @@ public class GCalendrierBalade extends JFrame {
 	}
 	
 	private void cmbBaladeInit() {
-		DBalade db = new DBalade();
-		ArrayList<CBalade> lst_ba = db.find(cl.getIDCalendrier());
+		DAO<CBalade> db = new DBalade();
+		ArrayList<CBalade> lst_ba = ((DBalade)db).findAll(cl.getIDCalendrier());
 		
 		for(CBalade cb : lst_ba) {
 			cmb_balade.addItem(cb);
@@ -289,6 +290,7 @@ public class GCalendrierBalade extends JFrame {
 			CBalade cb = (CBalade) cmb_balade.getSelectedItem();
 			cmb_voiture.removeAllItems();
 			for(CVehicule cv : cb.getLstVehicule()) {
+				cv.SetBalade(cb);
 				cmb_voiture.addItem(cv);
 			}
 		}
@@ -320,90 +322,87 @@ public class GCalendrierBalade extends JFrame {
 	}
 	
 	private void enregistrerVehicule() {
-		
-		if(!verificationDejaEnregistre()) {
-			try {
+		try {
+			if(verificationDejaEnregistre()) {
 				if(txt_place_assise.getText()!="" && txt_place_velo.getText()!="" && txt_imma.getText()!="" && cmb_balade.getItemCount()!=0) {
-					DVehicule dv = new DVehicule();
+					DAO<CVehicule> dv = new DVehicule();
 					CBalade cb = (CBalade)cmb_balade.getSelectedItem();
-					boolean ok = dv.create(cm.getIDPersonne(), Integer.parseInt(txt_place_assise.getText()) , Integer.parseInt(txt_place_velo.getText()), txt_imma.getText(), cb.getIDBalade());
+					
+					CVehicule cv = new CVehicule(cm,Integer.parseInt(txt_place_assise.getText()) , Integer.parseInt(txt_place_velo.getText()), txt_imma.getText());
+					cb.ajouterVehicule(cv);
+					
+					boolean ok = ((DVehicule)dv).create(cv);
 					if(ok) {
-						CVehicule cv = new CVehicule(cm,Integer.parseInt(txt_place_assise.getText()) , Integer.parseInt(txt_place_velo.getText()), txt_imma.getText());
-						cb.ajouterVehicule(cv);
+						
 						lbl_err.setForeground(Color.black);
 						lbl_err.setText("Véhicule ajouté!");
 						cmbVoitureInit();
 					}
+					
 				}
 				else {
 					lbl_err.setForeground(Color.RED);
 					lbl_err.setText("Remplissez les champs!");
 				}
-				
 			}
-			catch(Exception e) {
-				lbl_err.setForeground(Color.RED);
-				lbl_err.setText("Ajout véhicule non validé!");
-			}
+			
+		}
+		catch(Exception e) {
+			lbl_err.setForeground(Color.RED);
+			lbl_err.setText(e.getMessage());
 		}
 	}
 	
 	private void ajouterPassager() {
 		
-		if(!verificationDejaEnregistre()) {
-			DVehicule dv = new DVehicule();
-			CVehicule cv = (CVehicule)cmb_voiture.getSelectedItem();
-			
-			
-			if( cv == null ) {
-				if(cv.placeLibre() > 0) {
-					if(dv.createCoVoiturage(cm,cv)) {
-						cv.ajouterPassager(cm);
-						lbl_err.setForeground(Color.black);
-						lbl_err.setText("Passager enregistré!");
-						cmbVoitureInit();
-					}
-					else {
-						lbl_err.setForeground(Color.RED);
-						lbl_err.setText("Erreur : Demande non enregistrée!");
-					}
+		try {
+			if( verificationDejaEnregistre() ) {			
+				DAO<CVehicule> dv = new DVehicule();
+				CVehicule cv = (CVehicule)cmb_voiture.getSelectedItem();
+				CBalade ca = (CBalade)cmb_balade.getSelectedItem();
+				
+				if( cv == null )
+					throw new Exception("Erreur, pas de véhicule dispo");
+				if(ca.getIDBalade() != cv.GetBalade().getIDBalade()) 
+					throw new Exception("Erreur, clickez sur afficher");
+				if( cv.placeLibre() == 0 )
+					throw new Exception("Erreur : Plus de place!");
+				
+				cv.ajouterPassager(cm);
+				
+				if( dv.update(cv) ) {						
+					lbl_err.setForeground(Color.black);
+					lbl_err.setText("Passager enregistré!");
+					cmbVoitureInit();
 				}
 				else {
-					lbl_err.setForeground(Color.RED);
-					lbl_err.setText("Erreur : Plus de place!");
+					throw new Exception("Erreur de base de donnée :-(");
 				}
 				
 			}
-		}
-		else {
+		} catch ( Exception e ) {
 			lbl_err.setForeground(Color.RED);
-			lbl_err.setText("Erreur : Pas de véhicule!");
+			lbl_err.setText(e.getMessage());
 		}
 		
 	}
 	
-	private boolean verificationDejaEnregistre() {
+	private boolean verificationDejaEnregistre() throws Exception {
 		CBalade cb = (CBalade) cmb_balade.getSelectedItem();
-		if( cb == null ) {
-			lbl_err.setForeground(Color.RED);
-			lbl_err.setText("Vous devez selectionner une balade!");
-			return true;
-		}
+		
+		if( cb == null )
+			throw new Exception("Vous devez selectionner une balade!");
 		
 		ArrayList <CVehicule> lstVehicule = cb.getLstVehicule();
 		for(CVehicule cv : lstVehicule) {
-			if(cv.estConducteur(cm)) {
-				lbl_err.setForeground(Color.RED);
-				lbl_err.setText("Vous êtes déjà chauffeur pour cette balade!");
-				return true;
-			}
-			if(cv.estPassager(cm)) {
-				lbl_err.setForeground(Color.RED);
-				lbl_err.setText("Vous êtes déjà passager pour cette balade!");
-				return true;
-			}
+			if(cv.estConducteur(cm))
+				throw new Exception("Vous êtes déjà chauffeur pour cette balade!");
+
+			if(cv.estPassager(cm))
+				throw new Exception("Vous êtes déjà passager pour cette balade!");
+			
 		}
 		
-		return false;
+		return true;
 	}
 }

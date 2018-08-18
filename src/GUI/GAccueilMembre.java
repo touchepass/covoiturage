@@ -1,8 +1,5 @@
 package GUI;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -17,6 +14,7 @@ import javax.swing.border.LineBorder;
 import Classe.CCategorie;
 import Classe.CMembre;
 import Classe.CPersonne;
+import DAO.DAO;
 import DAO.DCategorie;
 import DAO.DMembre;
 import DAO.DPersonne;
@@ -27,6 +25,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JTextField;
 
+@SuppressWarnings("serial")
 public class GAccueilMembre extends JFrame {
 	
 	private CMembre cm;
@@ -270,20 +269,31 @@ public class GAccueilMembre extends JFrame {
 	}
 	
 	private void initCmbLstCat() {
-		DCategorie dc = new DCategorie();
-		ArrayList <CCategorie> lstCatInscrit = new ArrayList <CCategorie>();
-		lstCatInscrit = dc.find(cm);
-		for(CCategorie cc : lstCatInscrit) {
+		for(CCategorie cc : cm.getLstCat() ) {
 			cmb_lstCat.addItem(cc);
 		}
 	}
 	
 	private void initCmbLstAutreCat() {
-		DCategorie dc = new DCategorie();
-		ArrayList <CCategorie> lstAutreCat = new ArrayList <CCategorie>();
-		lstAutreCat = dc.notFind(cm);
+		DAO<CCategorie> dc = new DCategorie();
+		
+		ArrayList <CCategorie> lstAutreCat = dc.findAll();
+		ArrayList <CCategorie> lstCat = cm.getLstCat();
+		
 		for(CCategorie cc : lstAutreCat) {
-			cmb_lstAutreCat.addItem(cc);
+			
+			boolean found = false;
+			
+			for(CCategorie cc2 : lstCat) {
+				if( cc2.getIDCategorie() == cc.getIDCategorie() ) {
+					found = true;
+					break;
+				}
+			}
+			
+			if( !found )
+				cmb_lstAutreCat.addItem(cc);
+			
 		}
 	}
 	
@@ -294,14 +304,13 @@ public class GAccueilMembre extends JFrame {
 	}
 	
 	private void ajouterCategorie(CCategorie ca) {
-		DMembre dm = new DMembre();
-		if(ca != null && dm != null && dm.create(ca, cm)) {
-			cm.ajouterCategorie(ca);
+		cm.ajouterCategorie(ca);
+		cm.setPayementCotistion(false);
+		
+		DAO<CMembre> dm = new DMembre();
+		if(ca != null && dm != null && dm.update(cm) ) {
 			cmb_lstAutreCat.removeItem(ca);
 			cmb_lstCat.addItem(ca);
-			if(dm.updateCotisation(cm,false)) {
-				cm.setPayementCotistion(false);
-			}
 		}
 		else {
 			lbl_err.setText("Erreur : Rien à ajouter");
@@ -313,14 +322,16 @@ public class GAccueilMembre extends JFrame {
 	private void modifierDonnees(String tel,String mail,String rue,String numRue,String cp,String ville) {
 		
 		if(!tel.isEmpty() && !mail.isEmpty() && !rue.isEmpty() && !numRue.isEmpty() && !cp.isEmpty() && !ville.isEmpty() ) {
-			DPersonne dp = new DPersonne();
-			if(dp.update((CPersonne)cm,tel,mail,rue,numRue,cp,ville)) {
-				cm.setTel(tel);
-				cm.setMail(mail);
-				cm.setRue(rue);
-				cm.setNumRue(numRue);
-				cm.setCp(cp);
-				cm.setLocalite(ville);
+			
+			cm.setTel(tel);
+			cm.setMail(mail);
+			cm.setRue(rue);
+			cm.setNumRue(numRue);
+			cm.setCp(cp);
+			cm.setLocalite(ville);
+			
+			DAO<CPersonne> dp = new DPersonne();			
+			if( ((DPersonne)dp).update((CPersonne)cm) ) {
 				lbl_err.setText("");
 				lbl_ok.setText("Modifications validées!");
 			}

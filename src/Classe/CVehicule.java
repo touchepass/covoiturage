@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class CVehicule {
 	
 	private int IDVehicule;
+	private CBalade balade;
 	private CMembre conducteur;
 	private ArrayList<CMembre> lstPassager;
 	private int nbrPlaceAssise;
@@ -19,6 +20,7 @@ public class CVehicule {
 		this.nbrPlaceAssise = nbrPlaceAssise;
 		this.nbrPlaceVelo = nbrPlaceVelo;
 		this.imma = imma;
+		
 		lstPassager = new ArrayList<CMembre>();
 	}
 	
@@ -62,7 +64,9 @@ public class CVehicule {
 	
 	// Mutateurs
 	
-	
+	public void SetBalade(CBalade balade) {
+		this.balade = balade;
+	}
 	
 	
 	//Méthodes
@@ -95,6 +99,10 @@ public class CVehicule {
 	
 	public void ajouterPassager(CMembre cm) {
 		getLstPassager().add(cm);
+	}
+	
+	public CBalade GetBalade() {
+		return this.balade;
 	}
 	
 }

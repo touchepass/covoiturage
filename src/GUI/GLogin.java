@@ -1,33 +1,31 @@
 package GUI;
 
-import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.Rectangle;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.CompoundBorder;
 
 import Classe.CMembre;
 import Classe.CPersonne;
 import Classe.CResponsable;
 import Classe.CTresorier;
+import DAO.DAO;
 import DAO.DMembre;
 import DAO.DPersonne;
 import DAO.DResponsable;
 import DAO.DTresorier;
 
-import javax.swing.JTextField;
-import javax.swing.JLabel;
-import java.awt.Font;
-import java.awt.Rectangle;
-
-import javax.swing.SwingConstants;
-import javax.swing.JButton;
-import javax.swing.border.CompoundBorder;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.Color;
-
+@SuppressWarnings("serial")
 public class GLogin extends JFrame {
 	
 	private JPanel contentPane;
@@ -127,25 +125,27 @@ public class GLogin extends JFrame {
 	
 	private void seConnecter() {
 		CPersonne cp = null;
-		DPersonne dp = new DPersonne();
+		DAO<CPersonne> dp = new DPersonne();
 		
 		CMembre cm = null;
 		CTresorier ct= null;
 		CResponsable cr = null;
 		
 		if(!checkInfoVide()) {
-			cp = dp.find(txtPseudo.getText().toLowerCase(), txtPass.getText());
+			cp = ((DPersonne)dp).find(txtPseudo.getText().toLowerCase(), txtPass.getText());
+			
 			if(cp != null) {
 				txtErreur.setText("");
-				DMembre dm = new DMembre();
+				DAO<CMembre> dm = new DMembre();
 				cm = dm.find(cp);
+				
 				if(cm != null) {
 					GAccueilMembre fenetre = new GAccueilMembre(cm,this.getBounds());
 					fenetre.setVisible(true);
 					this.dispose();
 				}
 				else {
-					DTresorier dt = new DTresorier();
+					DAO<CTresorier> dt = new DTresorier();
 					ct = dt.find(cp);
 					if(ct != null) {
 						GAccueilTresorier fenetre = new GAccueilTresorier(ct, this.getBounds());
@@ -153,7 +153,7 @@ public class GLogin extends JFrame {
 						this.dispose();
 					}
 					else {
-						DResponsable dr = new DResponsable();
+						DAO<CResponsable> dr = new DResponsable();
 						cr = dr.find(cp);
 						if(cr != null){
 							GAccueilResponsable fenetre = new GAccueilResponsable(this.getBounds(),cr);

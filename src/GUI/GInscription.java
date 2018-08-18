@@ -1,34 +1,34 @@
 package GUI;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
-import Classe.CCategorie;
-import Classe.CPersonne;
-import DAO.DCategorie;
-import DAO.DPersonne;
-
-import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.Rectangle;
-
-import javax.swing.JTextField;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+
+import Classe.CCategorie;
+import Classe.CMembre;
+import Classe.CPersonne;
+import DAO.DAO;
+import DAO.DCategorie;
+import DAO.DMembre;
+import DAO.DPersonne;
+
+@SuppressWarnings("serial")
 public class GInscription extends JFrame {
 
 	private JPanel contentPane;
@@ -301,9 +301,9 @@ public class GInscription extends JFrame {
 	}
 	
 	private void initCmbCat() {
-		DCategorie dc = new DCategorie();
-		ArrayList <CCategorie> lstCat = new ArrayList <CCategorie>();
-		lstCat = dc.find();
+		DAO<CCategorie> dc = new DCategorie();
+		ArrayList <CCategorie> lstCat = dc.findAll();
+		
 		for(CCategorie cc : lstCat) {
 			cmbCat.addItem(cc);
 		}
@@ -319,14 +319,19 @@ public class GInscription extends JFrame {
 			try {
 				String date = txtDateA.getText()+"-"+txtDateM.getText()+"-"+txtDateJ.getText();
 				Date dt = (new SimpleDateFormat("yyyy-MM-dd")).parse(date);
+				CCategorie cc = (CCategorie)cmbCat.getSelectedItem();
 				
-				CPersonne cp = new CPersonne(	txtNom.getText(), txtPrenom.getText(), dt, (cmbGenre.getSelectedItem()).toString(), txtTel.getText(),
+				CMembre cp = new CMembre(	txtNom.getText(), txtPrenom.getText(), dt, (cmbGenre.getSelectedItem()).toString(), txtTel.getText(),
 												txtMail.getText(), txtRue.getText(), txtNumRue.getText(), txtLocalite.getText(), txtCp.getText(),
 												txtPseudo.getText(), txtPass.getText());
-				CCategorie cc = (CCategorie)cmbCat.getSelectedItem();
-				DPersonne dp = new DPersonne();
-				if(dp.find(txtPseudo.getText())==null) {
-					if(dp.create(cp, cc)) {
+				cp.ajouterCategorie(cc);
+				
+				DAO<CPersonne> dp = new DPersonne();
+				DAO<CMembre> dm = new DMembre();
+								
+				if( dp.find(txtPseudo.getText()) == null ) {
+					if( dm.create( cp ) ) {
+						
 						retour();
 					}
 					else {

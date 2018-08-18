@@ -1,7 +1,7 @@
 package Classe;
 
-import java.util.Date;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class CMembre extends CPersonne{
 	private ArrayList<CCategorie> lstCat;
@@ -44,6 +44,10 @@ public class CMembre extends CPersonne{
 	
 	public void setPayementCotistion(boolean choix) {
 		this.payementCotistion = choix;
+	}
+	
+	public void setLstCat(ArrayList<CCategorie> lstCat){
+		this.lstCat = lstCat;
 	}
 	
 	// méthodes

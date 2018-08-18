@@ -2,14 +2,10 @@ package DAO;
 
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import javax.swing.JOptionPane;
-
 import Classe.CCategorie;
-import Classe.CMembre;
 
 
 public class DCategorie extends DAO<CCategorie>{
@@ -54,7 +50,7 @@ public class DCategorie extends DAO<CCategorie>{
 		return ca;
 	}
 	
-	public ArrayList <CCategorie> find(){
+	public ArrayList <CCategorie> findAll(){
 		
 		ArrayList <CCategorie> lstCat = new ArrayList <CCategorie>();
 		
@@ -75,49 +71,22 @@ public class DCategorie extends DAO<CCategorie>{
 		
 		return lstCat;
 	}
-	
-	public ArrayList <CCategorie> find(CMembre cm){
-		
-		ArrayList <CCategorie> lstCat = new ArrayList <CCategorie>();
-		
-		try {
-			Statement stmt = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-			ResultSet result = stmt.executeQuery("select * from TLigne_TCategorie where IDPersonne="+cm.getIDPersonne());
-			
-			while(result.next()) {
-				CCategorie ca = find(result.getInt("IDCategorie"));
-				lstCat.add(ca);
-			}
-		}
-		catch(Exception e){
-			System.out.println(e.getMessage());
-			lstCat = null;
-			
-		}
-		
-		return lstCat;
+
+	public boolean create(CCategorie obj) {
+		return false;
 	}
-	
-	public ArrayList <CCategorie> notFind(CMembre cm){
-		
-		ArrayList <CCategorie> lstCat = new ArrayList <CCategorie>();
-		
-		try {
-			Statement stmt = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-			ResultSet result = stmt.executeQuery("SELECT * FROM TCategorie WHERE IDCategorie NOT IN( select IDCategorie  FROM TLigne_TCategorie WHERE IDPersonne = "+cm.getIDPersonne()+");");
-			
-			while(result.next()) {
-				CCategorie ca = find(result.getInt("IDCategorie"));
-				lstCat.add(ca);
-			}
-		}
-		catch(Exception e){
-			System.out.println(e.getMessage());
-			lstCat = null;
-			
-		}
-		
-		return lstCat;
+	public boolean delete(CCategorie obj) {
+		return false;
+	}
+
+	public boolean update(CCategorie obj) {
+		return false;
+	}
+
+	public CCategorie find(Object obj) {
+		if( obj instanceof String )
+			return find( (String)obj );
+		return find( (int)obj );
 	}
 	
 	

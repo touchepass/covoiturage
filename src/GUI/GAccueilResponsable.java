@@ -1,35 +1,31 @@
 package GUI;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Rectangle;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
 import Classe.CBalade;
 import Classe.CCalendrier;
 import Classe.CResponsable;
+import DAO.DAO;
 import DAO.DBalade;
 import DAO.DCalendrier;
 
-import javax.swing.border.LineBorder;
-import java.awt.Color;
-import javax.swing.JLabel;
-import java.awt.Font;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JTextField;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
+@SuppressWarnings("serial")
 public class GAccueilResponsable extends JFrame {
 
 	private JPanel contentPane;
@@ -52,7 +48,7 @@ public class GAccueilResponsable extends JFrame {
 	 */
 	public GAccueilResponsable(Rectangle rectangle, CResponsable cr) {
 		this.cr = cr;
-		DCalendrier dc = new DCalendrier();
+		DAO<CCalendrier> dc = new DCalendrier();
 		this.cc = dc.find(cr.getCat().getNom());
 		initialize(rectangle);
 	}
@@ -247,7 +243,7 @@ public class GAccueilResponsable extends JFrame {
 	
 	private void supprimerBalade() {
 		if(cmbBalade.getItemCount()>0) {
-			DBalade db = new DBalade();
+			DAO<CBalade> db = new DBalade();
 			CBalade cb = (CBalade)cmbBalade.getSelectedItem();
 			if(db.delete(cb)) {
 				cmbBalade.removeItem(cb);
@@ -258,7 +254,10 @@ public class GAccueilResponsable extends JFrame {
 	
 	
 	private void ajouterBalade() {
-		DBalade db = new DBalade();
+		DAO<CBalade> db = new DBalade();
+		DAO<CCalendrier> dc = new DCalendrier();
+		
+		
 		if(	!txtRue.getText().isEmpty() && !txtNum.getText().isEmpty() && !txtCp.getText().isEmpty() && !txtLocalite.getText().isEmpty() && 
 			!txtForfait.getText().isEmpty() && !txtDateJ.getText().isEmpty() && !txtDateM.getText().isEmpty() && !txtDateA.getText().isEmpty()) {
 			
@@ -268,8 +267,11 @@ public class GAccueilResponsable extends JFrame {
 				Date dt = (new SimpleDateFormat("yyyy-MM-dd")).parse(date);
 	
 				CBalade cb = new CBalade(txtRue.getText(),txtNum.getText(),txtLocalite.getText(),Integer.parseInt(txtCp.getText()),dt,Integer.parseInt(txtForfait.getText()));
-				if(db.create(cb,cc)) {
+				
+				if( db.create(cb) ) {
 					cc.ajouterBalade(cb);
+					dc.update(cc);
+					
 					cmbBalade.addItem(cb);
 					lblErr.setForeground(Color.BLACK);
 					lblErr.setText("Enregistrement effectué!");

@@ -2,15 +2,18 @@ package DAO;
 
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
-import Classe.*;
+import Classe.CCategorie;
+import Classe.CRandonneur;
 
 public class DRandonneur extends DAO<CRandonneur>{
 	
-	public CRandonneur find(CVtt cv) {
+	public CRandonneur find(Object obj) {
 		
+		CCategorie cv = (CCategorie)obj;
 		CRandonneur cr = null;
 		
 		try {
@@ -26,5 +29,21 @@ public class DRandonneur extends DAO<CRandonneur>{
 		}
 		
 		return cr;
+	}
+
+	public boolean create(CRandonneur obj) {
+		return false;
+	}
+
+	public boolean delete(CRandonneur obj) {
+		return false;
+	}
+	
+	public boolean update(CRandonneur obj) {
+		return false;
+	}
+
+	public ArrayList<CRandonneur> findAll() {
+		return null;
 	}	
 }

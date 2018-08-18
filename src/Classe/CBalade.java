@@ -75,6 +75,12 @@ public class CBalade {
 		return lstVehicule;
 	}
 	
+	// Mutateur
+	
+	public void SetIDBalade(int id) {
+		IDBalade = id;
+	}
+	
 	// Méthodes 
 	
 	@Override
@@ -84,6 +90,7 @@ public class CBalade {
 	
 	public void ajouterVehicule(CVehicule cv) {
 		lstVehicule.add(cv);
+		cv.SetBalade(this);
 	}
 	
 }

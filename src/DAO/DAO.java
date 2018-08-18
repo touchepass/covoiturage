@@ -1,6 +1,7 @@
 package DAO;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 
 public abstract class DAO<T> {
 	
@@ -10,21 +11,14 @@ public abstract class DAO<T> {
 		this.connect = DConnection.getInstance();
 	}
 	
-	public boolean create(T obj) {
-		throw new java.lang.UnsupportedOperationException();
-	}
+	public abstract boolean create(T obj);	
 	
-	public boolean delete(T obj){
-		throw new java.lang.UnsupportedOperationException();
-	}
+	public abstract boolean delete(T obj);
 	
-	public boolean update(T obj){
-		throw new java.lang.UnsupportedOperationException();
-	}
+	public abstract boolean update(T obj);
 	
-	public T find(Object obj){
-		throw new java.lang.UnsupportedOperationException();
-	}
-
+	public abstract T find(Object obj);
+	
+	public abstract ArrayList<T> findAll();
 
 }

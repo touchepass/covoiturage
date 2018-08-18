@@ -1,21 +1,22 @@
 package DAO;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import Classe.*;
+import Classe.CMembre;
+import Classe.CPersonne;
+import Classe.CVehicule;
 
 public class DVehicule extends DAO<CVehicule>{
 	
-	public ArrayList <CVehicule> find(int IDBalade){
+	public ArrayList <CVehicule> findAll(int IDBalade){
 		
 		ArrayList <CVehicule> lst_ve = new ArrayList <CVehicule>();
+		DAO<CMembre> dm = new DMembre();
+		DAO<CPersonne> dp = new DPersonne();
 		CVehicule ve = null;
-		DMembre dm = new DMembre();
-		DPersonne dp = new DPersonne();
 		
 		try {
 			Statement stmt = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
@@ -43,7 +44,7 @@ public class DVehicule extends DAO<CVehicule>{
 		return lst_ve;
 	}
 	
-	public boolean create(int IDPersonne, int nbrPlaceAssise, int nbrPlaceVelo, String imma,int IDBalade) {
+	public boolean create(CVehicule obj) {
 		try{
 			
 			String insertStr = 	"INSERT INTO TVehicule (IDPersonne,nbrPlaceAssise,nbrPlaceVelo,imma,IDBalade)"+
@@ -51,34 +52,12 @@ public class DVehicule extends DAO<CVehicule>{
 
 			PreparedStatement insertStmt = this.connect.prepareStatement(insertStr);
 			
-			insertStmt.setInt(1, IDPersonne);
-			insertStmt.setInt(2, nbrPlaceAssise);
-			insertStmt.setInt(3, nbrPlaceVelo);
-			insertStmt.setString(4, imma);
-			insertStmt.setInt(5, IDBalade);
+			insertStmt.setInt(1, obj.getConducteur().getIDPersonne() );
 			
-			insertStmt.executeUpdate();
-
-		}
-		catch(Exception e){
-			System.out.println(e.getMessage());
-			return false;
-		}
-		
-		return true;
-	}
-	
-	public boolean createCoVoiturage(CMembre cm, CVehicule cv) {
-		try{
-			
-			String insertStr = 	"NSERT INTO TPassager_TVehicule (IDVehicule,IDPersonne) "+
-					" VALUES (?,?)"; 
-
-			PreparedStatement insertStmt = this.connect.prepareStatement(insertStr);
-			
-			insertStmt.setInt(1, cv.getIDVehicule());
-			insertStmt.setInt(2, cm.getIDPersonne());
-			
+			insertStmt.setInt(2, obj.getNbrPlaceAssise());
+			insertStmt.setInt(3, obj.getNbrPlaceVelo());
+			insertStmt.setString(4, obj.getImma());
+			insertStmt.setInt(5, obj.GetBalade().getIDBalade() );
 			
 			insertStmt.executeUpdate();
 
@@ -92,8 +71,8 @@ public class DVehicule extends DAO<CVehicule>{
 	}
 	
 	public ArrayList <CMembre> findPassagers(int IDVehicule){
-		DMembre dm = new DMembre();
-		DPersonne dp = new DPersonne();
+		DAO<CMembre> dm = new DMembre();
+		DAO<CPersonne> dp = new DPersonne();
 		ArrayList <CMembre> lst_cm = new ArrayList <CMembre>();
 		CMembre cm = null;
 		
@@ -113,6 +92,49 @@ public class DVehicule extends DAO<CVehicule>{
 		}
 		
 		return lst_cm;
+	}
+	
+	public boolean delete(CVehicule obj) {
+		return false;
+	}
+
+	public boolean update(CVehicule cv) {
+		
+		try{
+			
+			String updateStr2 = "DELETE FROM TPassager_TVehicule WHERE IDVehicule = ?";
+			
+			PreparedStatement updateStmt2 = this.connect.prepareStatement(updateStr2);
+			updateStmt2.setInt(1, cv.getIDVehicule() );
+			updateStmt2.executeUpdate();
+			
+			for(CPersonne pers : cv.getLstPassager() ) {
+			
+				String insertStr = 	"INSERT INTO TPassager_TVehicule (IDVehicule,IDPersonne) VALUES (?,?)"; 
+	
+				PreparedStatement insertStmt = this.connect.prepareStatement(insertStr);
+				
+				insertStmt.setInt(1, cv.getIDVehicule());
+				insertStmt.setInt(2, pers.getIDPersonne());
+				
+				insertStmt.executeUpdate();
+			}
+
+		}
+		catch(Exception e){
+			System.out.println(e.getMessage());
+			return false;
+		}
+		
+		return true;
+	}
+
+	public CVehicule find(Object obj) {
+		return null;
+	}
+
+	public ArrayList<CVehicule> findAll() {
+		return null;
 	}
 }
 

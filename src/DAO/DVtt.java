@@ -2,6 +2,8 @@ package DAO;
 
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
+
 import javax.swing.JOptionPane;
 
 import Classe.CCategorie;
@@ -9,8 +11,8 @@ import Classe.CVtt;
 
 public class DVtt extends DAO<CVtt> {
 	
-	public CVtt find(CCategorie ca) {
-		
+	public CVtt find(Object obj) {
+		CCategorie ca = (CCategorie)obj;
 		CVtt cv = null;
 		
 		try {
@@ -26,5 +28,21 @@ public class DVtt extends DAO<CVtt> {
 		}
 		
 		return cv;
+	}
+
+	public boolean create(CVtt obj) {
+		return false;
+	}
+
+	public boolean delete(CVtt obj) {
+		return false;
+	}
+
+	public boolean update(CVtt obj) {
+		return false;
+	}
+
+	public ArrayList<CVtt> findAll() {
+		return null;
 	}
 }

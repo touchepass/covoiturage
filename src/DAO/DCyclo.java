@@ -2,14 +2,17 @@ package DAO;
 
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
-import Classe.*;
+import Classe.CCategorie;
+import Classe.CCyclo;
 
 public class DCyclo extends DAO<CCyclo> {
 	
-	public CCyclo find(CCategorie ca) {
+	public CCyclo find(Object obj) {
+		CCategorie ca = (CCategorie)obj;
 		
 		CCyclo cy = null;
 		
@@ -26,5 +29,21 @@ public class DCyclo extends DAO<CCyclo> {
 		}
 		
 		return cy;
+	}
+
+	public boolean create(CCyclo obj) {
+		return false;
+	}
+
+	public boolean delete(CCyclo obj) {
+		return false;
+	}
+
+	public boolean update(CCyclo obj) {
+		return false;
+	}
+
+	public ArrayList<CCyclo> findAll() {
+		return null;
 	}
 }

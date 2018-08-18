@@ -4,10 +4,9 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 
-import javax.swing.JOptionPane;
-
-import Classe.*;
+import Classe.CPersonne;
 
 public class DPersonne extends DAO<CPersonne> {
 	
@@ -83,7 +82,7 @@ public class DPersonne extends DAO<CPersonne> {
 		return p;
 	}
 	
-	public boolean update(CPersonne cpers,String tel,String mail,String rue,String numRue,String cp,String ville){
+	public boolean update(CPersonne cpers) {
 		
 		try{
 			
@@ -98,12 +97,12 @@ public class DPersonne extends DAO<CPersonne> {
 			
 			PreparedStatement updateStmt = this.connect.prepareStatement(updateStr);
 			
-			updateStmt.setString(1, tel);
-			updateStmt.setString(2, rue);
-			updateStmt.setString(3, mail);
-			updateStmt.setString(4, numRue);
-			updateStmt.setString(5, cp);
-			updateStmt.setString(6, ville);
+			updateStmt.setString(1, cpers.getTel());
+			updateStmt.setString(2, cpers.getRue());
+			updateStmt.setString(3, cpers.getMail());
+			updateStmt.setString(4, cpers.getNumRue());
+			updateStmt.setString(5, cpers.getCp());
+			updateStmt.setString(6, cpers.getLocalite());
 			updateStmt.setInt(7, cpers.getIDPersonne());
 	
 			updateStmt.executeUpdate();
@@ -118,7 +117,7 @@ public class DPersonne extends DAO<CPersonne> {
 	}
 	
 	
-	public boolean create(CPersonne cp, CCategorie ca) {
+	public boolean create(CPersonne cp) {
 		try{
 			
 			java.sql.Date sqlDate = new java.sql.Date(cp.getDateNaissance().getTime());
@@ -148,9 +147,7 @@ public class DPersonne extends DAO<CPersonne> {
 			k.next();
 			
 			cp.setIDPersonne((int)k.getLong(1));
-			DMembre dm = new DMembre();
-			if(!dm.create(ca, cp))
-				return false;
+			
 		}
 		catch(Exception e){
 			System.out.println(e.getMessage());
@@ -158,6 +155,20 @@ public class DPersonne extends DAO<CPersonne> {
 		}
 		
 		return true;
+	}
+
+	public boolean delete(CPersonne obj) {
+		return false;
+	}
+
+	public CPersonne find(Object obj) {
+		if( obj instanceof String )
+			return find( (String)obj );
+		return find( (int)obj );
+	}
+
+	public ArrayList<CPersonne> findAll() {
+		return null;
 	}
 	
 }

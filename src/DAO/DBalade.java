@@ -4,24 +4,27 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import Classe.*;
+import Classe.CBalade;
+import Classe.CVehicule;
 
 public class DBalade extends DAO<CBalade> {
 	
-	public ArrayList <CBalade> find(int IDCalendrier) {
+	public ArrayList <CBalade> findAll(int IDCalendrier) {
 		
 		ArrayList <CBalade> lst_ba = new ArrayList <CBalade>();
-		CBalade ca = null;
-		DVehicule de = new DVehicule();
+		DAO<CVehicule> de = new DVehicule();
 		
 		try {
 			Statement stmt = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			ResultSet result = stmt.executeQuery("select * from TBalade where IDBalade in ( select IDBalade from TLigne_TBalade where IDCalendrier="+IDCalendrier+");");
 			
 			while(result.next()) {
-				ca = new CBalade(	result.getInt("IDBalade"),result.getString("rue"),result.getString("numRue"),
+				CBalade ca = new CBalade(result.getInt("IDBalade"),result.getString("rue"),result.getString("numRue"),
 									result.getString("localite"), result.getInt("cp"), result.getDate("dateD"),
-									result.getInt("forfait"),de.find(result.getInt("IDBalade")));
+									result.getInt("forfait"),
+									((DVehicule)de).findAll(result.getInt("IDBalade"))
+				);
+				
 				lst_ba.add(ca);
 			}
 		}
@@ -47,7 +50,7 @@ public class DBalade extends DAO<CBalade> {
 		return true;
 	}
 	
-	public boolean create(CBalade cb, CCalendrier cc) {
+	public boolean create(CBalade cb) {
 		try{
 			Statement stmt = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			java.sql.Date sqlDate = new java.sql.Date(cb.getDateD().getTime());
@@ -55,16 +58,15 @@ public class DBalade extends DAO<CBalade> {
 			String toto = "INSERT INTO TBalade (rue,numRue,localite,cp,dateD,forfait) "+
 					" VALUES ('"+cb.getRue()+"','"+cb.getNumRue()+"','"+cb.getLocalite()+"',"+cb.getCp()+",'"+sqlDate+" 00:00:00',"+cb.getForfait()+");" ;
 			
-			stmt.executeUpdate(
-					toto
-					);
+			stmt.executeUpdate(toto);
+			
 			
 			ResultSet k = stmt.getGeneratedKeys();
 			k.next();
-			stmt.executeUpdate(
-					"INSERT INTO TLigne_TBalade (IDBalade,IDCalendrier) "+
-					" VALUES ("+k.getLong(1)+","+cc.getIDCalendrier()+");" 
-					);
+			
+			
+			cb.SetIDBalade( (int)k.getLong(1) );
+			
 		}
 		catch(Exception e){
 			System.out.println(e.getMessage());
@@ -73,4 +75,18 @@ public class DBalade extends DAO<CBalade> {
 		
 		return true;
 	}
+
+	public boolean update(CBalade obj) {
+		return false;
+	}
+
+
+	public CBalade find(Object obj) {
+		return null;
+	}
+
+	public ArrayList<CBalade> findAll() {
+		return null;
+	}
+	
 }

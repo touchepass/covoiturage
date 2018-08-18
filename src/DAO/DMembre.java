@@ -4,15 +4,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Date;
 
 import javax.swing.JOptionPane;
 
-import Classe.*;
+import Classe.CCategorie;
+import Classe.CMembre;
+import Classe.CPersonne;
 
 public class DMembre extends DAO<CMembre>{
 	
-	public CMembre find(CPersonne cp){
+	public CMembre find(Object obj){
+		CPersonne cp = (CPersonne)obj;
+		
+		DAO<CCategorie> dc = new DCategorie();
 		
 		CMembre cm = null; 
 		try {
@@ -25,6 +29,17 @@ public class DMembre extends DAO<CMembre>{
 									cp.getGenre(), cp.getTel(), cp.getMail(),
 									cp.getRue(), cp.getNumRue(), cp.getLocalite(),
 									cp.getCp(), cp.getPseudo(), cp.getPass());
+				
+				ArrayList <CCategorie> lstCat = new ArrayList <CCategorie>();
+				
+				Statement stmt2 = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+				ResultSet result2 = stmt2.executeQuery("select * from TLigne_TCategorie where IDPersonne="+cm.getIDPersonne());
+				while(result2.next()) {
+					CCategorie ca = dc.find(result2.getInt("IDCategorie"));
+					lstCat.add(ca);
+				}
+				
+				cm.setLstCat(lstCat);
 			}
 	
 		}
@@ -35,42 +50,55 @@ public class DMembre extends DAO<CMembre>{
 		return cm;
 	}
 	
-	public ArrayList <CMembre> findCotisationImpaye(){
-		ArrayList <CMembre> lstCotisationImpaye = new ArrayList <CMembre>();
-		CMembre cm = null; 
+	public ArrayList <CMembre> findAll(){
+		ArrayList <CMembre> lst = new ArrayList <CMembre>();
+		
 		try {
 			Statement stmt = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-			ResultSet result = stmt.executeQuery("select * from TMembre where payementCotistion='false'");
+			ResultSet result = stmt.executeQuery("select IDPersonne from TMembre ");
 			
 			while(result.next()) {
-				DPersonne dp = new DPersonne();
+				DAO<CPersonne> dp = new DPersonne();
+				
 				CPersonne cp = dp.find(result.getInt("IDPersonne"));
-				cm = new CMembre(	result.getBoolean("payementCotistion"),cp.getIDPersonne(),
-									cp.getNom(), cp.getPrenom(), cp.getDateNaissance(),
-									cp.getGenre(), cp.getTel(), cp.getMail(),
-									cp.getRue(), cp.getNumRue(), cp.getLocalite(),
-									cp.getCp(), cp.getPseudo(), cp.getPass());
-				lstCotisationImpaye.add(cm);
+				CMembre mb = this.find(cp);
+				
+				lst.add(mb);
 			}
 		}
 		catch(Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
 		}
 		
-		return lstCotisationImpaye;
+		return lst;
 	}
 	
-	public boolean updateCotisation(CMembre cm, boolean paye){
+	public boolean update(CMembre cm){
 		
 		try{
 			String updateStr = "UPDATE TMembre SET payementCotistion = ? WHERE IDPersonne = ?";
 			
 			PreparedStatement updateStmt = this.connect.prepareStatement(updateStr);
 			
-			updateStmt.setBoolean(1, paye);
+			updateStmt.setBoolean(1, cm.getPayementCotistion() );
 			updateStmt.setInt(2, cm.getIDPersonne());
-	
 			updateStmt.executeUpdate();
+			
+			// TODO: Faire ça de façon plus propre? Genre supprimer + ajouter celle qui n'ont été modifiée.
+			String updateStr2 = "DELETE FROM TLigne_TCategorie WHERE IDPersonne = ?";
+			PreparedStatement updateStmt2 = this.connect.prepareStatement(updateStr2);
+			updateStmt2.setInt(1, cm.getIDPersonne());
+			updateStmt2.executeUpdate();
+			
+			for(CCategorie ca : cm.getLstCat()) {
+				String updateStr3 = "INSERT INTO TLigne_TCategorie (IDPersonne,IDCategorie) VALUES (?,?)";
+				PreparedStatement updateStmt3 = this.connect.prepareStatement(updateStr3);
+				
+				updateStmt3.setInt(1, cm.getIDPersonne());
+				updateStmt3.setInt(2, ca.getIDCategorie());
+				
+				updateStmt3.executeUpdate();
+			}
 		
 		}
 		catch(Exception e){
@@ -81,29 +109,12 @@ public class DMembre extends DAO<CMembre>{
 		return true;
 	}
 	
-	public boolean create(CCategorie ca, CMembre cm) {
-		try{
-			String updateStr = "INSERT INTO TLigne_TCategorie (IDPersonne,IDCategorie) VALUES (?,?) ";
+	public boolean create(CMembre cp) {
+		try {
 			
-			PreparedStatement updateStmt = this.connect.prepareStatement(updateStr);
-			
-			updateStmt.setInt(1, cm.getIDPersonne());
-			updateStmt.setInt(2, ca.getIDCategorie());
-	
-			updateStmt.executeUpdate();
-	
-		}
-		catch(Exception e){
-			System.out.println(e.getMessage());
-			return false;
-		}
-		
-		return true;
-	}
-	
-	
-	public boolean create(CCategorie ca, CPersonne cp) {
-		try{
+			DAO<CPersonne> dp = new DPersonne();
+			dp.create( (CPersonne)cp );
+
 			String updateStr = "INSERT INTO TMembre (IDPersonne,payementCotistion) VALUES (?,?)";
 			
 			PreparedStatement updateStmt = this.connect.prepareStatement(updateStr);
@@ -113,13 +124,15 @@ public class DMembre extends DAO<CMembre>{
 	
 			updateStmt.executeUpdate();
 			
-			String updateStr2 = "INSERT INTO TLigne_TCategorie (IDPersonne,IDCategorie) VALUES (?,?)";
-			PreparedStatement updateStmt2 = this.connect.prepareStatement(updateStr2);
-			
-			updateStmt2.setInt(1, cp.getIDPersonne());
-			updateStmt2.setInt(2, ca.getIDCategorie());
-			
-			updateStmt2.executeUpdate();
+			for(CCategorie ca : cp.getLstCat()) {
+				String updateStr2 = "INSERT INTO TLigne_TCategorie (IDPersonne,IDCategorie) VALUES (?,?)";
+				PreparedStatement updateStmt2 = this.connect.prepareStatement(updateStr2);
+				
+				updateStmt2.setInt(1, cp.getIDPersonne());
+				updateStmt2.setInt(2, ca.getIDCategorie());
+				
+				updateStmt2.executeUpdate();
+			}
 			
 		}
 		catch(Exception e){
@@ -128,6 +141,10 @@ public class DMembre extends DAO<CMembre>{
 		}
 		
 		return true;
+	}
+
+	public boolean delete(CMembre obj) {
+		return false;
 	}
 	
 }

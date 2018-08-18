@@ -2,17 +2,22 @@ package DAO;
 
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
-import Classe.*;
+import Classe.CCategorie;
+import Classe.CPersonne;
+import Classe.CResponsable;
 
 public class DResponsable extends DAO<CResponsable>{
 	
-	public CResponsable find(CPersonne cp){
+	public CResponsable find(Object obj){
+		
+		CPersonne cp = (CPersonne)obj;
 		
 		CResponsable cr = null;
-		DCategorie dc = new DCategorie();
+		DAO<CCategorie> dc = new DCategorie();
 		try {
 			Statement stmt = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			ResultSet result = stmt.executeQuery("select * from TResponsable where IDPersonne="+cp.getIDPersonne());
@@ -31,6 +36,22 @@ public class DResponsable extends DAO<CResponsable>{
 		}
 		
 		return cr;
+	}
+
+	public boolean create(CResponsable obj) {
+		return false;
+	}
+
+	public boolean delete(CResponsable obj) {
+		return false;
+	}
+
+	public boolean update(CResponsable obj) {
+		return false;
+	}
+
+	public ArrayList<CResponsable> findAll() {
+		return null;
 	}
 
 }

@@ -2,15 +2,18 @@ package DAO;
 
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
-import Classe.*;
+import Classe.CCategorie;
+import Classe.CTrialiste;
 
 public class DTrialiste extends DAO<CTrialiste>{
 	
-	public CTrialiste find(CVtt cv) {
+	public CTrialiste find(Object obj) {
 		
+		CCategorie cv = (CCategorie)obj;
 		CTrialiste ct = null;
 		
 		try {
@@ -26,5 +29,21 @@ public class DTrialiste extends DAO<CTrialiste>{
 		}
 		
 		return ct;
+	}
+
+	public boolean create(CTrialiste obj) {
+		return false;
+	}
+
+	public boolean delete(CTrialiste obj) {
+		return false;
+	}
+
+	public boolean update(CTrialiste obj) {
+		return false;
+	}
+
+	public ArrayList<CTrialiste> findAll() {
+		return null;
 	}
 }

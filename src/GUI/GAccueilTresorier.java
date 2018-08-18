@@ -1,39 +1,32 @@
 package GUI;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Rectangle;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
-import javax.swing.JScrollPane;
-import javax.swing.JToolBar;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import Classe.CMembre;
 import Classe.CTresorier;
+import DAO.DAO;
 import DAO.DMembre;
 
-import java.awt.Color;
-import javax.swing.JComboBox;
-import javax.swing.JButton;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
+@SuppressWarnings("serial")
 public class GAccueilTresorier extends JFrame {
 	
 	private CTresorier ct;
 	private JPanel contentPane;
 	private JPanel panel;
 	private JComboBox<CMembre> comboBox;
-	private JButton btnValider;
 	private JLabel lbl_err;
 	
 	
@@ -113,20 +106,23 @@ public class GAccueilTresorier extends JFrame {
 	}
 	
 	private void initCombo() {
-		DMembre dm = new DMembre();
-		ArrayList <CMembre> lstCotImpaye = new ArrayList <CMembre>();
-		lstCotImpaye = dm.findCotisationImpaye();
-		for(CMembre cm : lstCotImpaye) {
-			comboBox.addItem(cm);
+		DAO<CMembre> dm = new DMembre();
+		ArrayList <CMembre> lst = dm.findAll();
+		
+		for(CMembre cm : lst) {
+			if( cm.getPayementCotistion() == false )
+				comboBox.addItem(cm);
 		}
+		
 	}
 	
 	private void validerPayement() {
 		if(this.comboBox.getSelectedItem()!= null){
-			DMembre dm = new DMembre();
+			DAO<CMembre> dm = new DMembre();
 			CMembre cm = (CMembre)this.comboBox.getSelectedItem();
+			cm.setPayementCotistion(true);
 			
-			boolean maj = dm.updateCotisation(cm,true);
+			boolean maj = dm.update(cm);
 			if(maj) {
 				comboBox.removeItem(cm);
 			}

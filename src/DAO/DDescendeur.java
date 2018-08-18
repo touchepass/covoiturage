@@ -1,15 +1,18 @@
 package DAO;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
-import Classe.*;
+import Classe.CCategorie;
+import Classe.CDescendeur;
 
 public class DDescendeur extends DAO<CDescendeur>{
 
-	public CDescendeur find(CVtt cv) {
+	public CDescendeur find(Object obj) {
 		
+		CCategorie cv = (CCategorie)obj;
 		CDescendeur cd = null;
 		
 		try {
@@ -25,5 +28,21 @@ public class DDescendeur extends DAO<CDescendeur>{
 		}
 		
 		return cd;
+	}
+
+	public boolean create(CDescendeur obj) {
+		return false;
+	}
+
+	public boolean delete(CDescendeur obj) {
+		return false;
+	}
+
+	public boolean update(CDescendeur obj) {
+		return false;
+	}
+
+	public ArrayList<CDescendeur> findAll() {
+		return null;
 	}
 }
